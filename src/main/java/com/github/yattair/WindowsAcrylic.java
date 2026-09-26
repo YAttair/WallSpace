@@ -111,7 +111,7 @@ public class WindowsAcrylic {
          *
          */
 
-        policy.GradientColor = 0x66202020;
+        policy.GradientColor = 0x33202020;
 
         policy.AnimationId = 0;
 
