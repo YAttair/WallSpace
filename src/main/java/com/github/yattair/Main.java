@@ -63,6 +63,8 @@ public class Main extends Application {
         HWND hwnd = WindowManager.getHandle(stage);
 
         WindowsAcrylic.enable(hwnd);
+
+        WindowManager.reparentWindow(hwnd, WindowManager.getWorkerW());
     }
 
     public static void main(String[] args) {

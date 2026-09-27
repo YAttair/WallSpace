@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.HWND;
 
+import com.sun.jna.platform.win32.WinUser;
 import javafx.stage.Stage;
 public class WindowManager {
 
@@ -34,7 +35,7 @@ public class WindowManager {
                     null
 
             );
-            if (shellView == null) {
+            if (shellView != null) {
                 workerw[0] = User32.INSTANCE.FindWindowEx(
                         null,
                         hwnd,
@@ -47,4 +48,45 @@ public class WindowManager {
 
         return workerw[0];
     }
+
+    public static void reparentWindow(HWND javafxhwnd, HWND workerw){
+        if(javafxhwnd == null || workerw == null) {
+            System.out.println("1");
+            return;
+        }
+        System.out.println("didnt return");
+        User32.INSTANCE.SetParent(javafxhwnd, workerw);
+    }
+
+    public static void makeUnminimizable(HWND hwnd) {
+        if (hwnd == null) {
+            return;
+        }
+
+        int style = User32.INSTANCE.GetWindowLong(
+                hwnd,
+                WinUser.GWL_STYLE
+        );
+
+        // Remove minimize button
+        style &= ~WinUser.WS_MINIMIZEBOX;
+
+        User32.INSTANCE.SetWindowLong(
+                hwnd,
+                WinUser.GWL_STYLE,
+                style
+        );
+
+        // Tell Windows that the frame/style has changed
+        User32.INSTANCE.SetWindowPos(
+                hwnd,
+                null,
+                0, 0, 0, 0,
+                WinUser.SWP_NOMOVE |
+                        WinUser.SWP_NOSIZE |
+                        WinUser.SWP_NOZORDER |
+                        WinUser.SWP_FRAMECHANGED
+        );
+    }
+
 }
